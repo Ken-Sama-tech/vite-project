@@ -1,0 +1,73 @@
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-left {
+  opacity: 0;
+  z-index: -1;
+  left: -1000px;
+}
+
+.appear-left {
+  opacity: 1;
+  z-index: 999;
+  left: 0;
+}
+
+.rm-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.skeleton-load {
+  border-radius: 0.7rem;
+  opacity: 0.7;
+  animation: skeleton-load 1s ease-in-out infinite alternate;
+}
+
+.blur-effect {
+  position: relative;
+  backdrop-filter: blur(0);
+}
+
+.blur-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(5px);
+  z-index: 2;
+  animation: blur-in 0.2s ease-out forwards;
+}
+
+.fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes blur-in {
+  from {
+    backdrop-filter: blur(0);
+  }
+  to {
+    backdrop-filter: blur(5px);
+  }
+}
+
+@keyframes skeleton-load {
+  0% {
+    background-color: hsl(220, 8%, 30%);
+  }
+  100% {
+    background-color: hsl(220, 8%, 25%);
+  }
+}

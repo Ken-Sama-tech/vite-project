@@ -1,0 +1,24 @@
+{
+    "main": [
+        {
+            "path": "/",
+            "label": "Anime"
+        },
+        {
+            "path": "/manga",
+            "label": "Manga"
+        },
+        {
+            "path": "/novel",
+            "label": "Novel"
+        },
+        {
+            "path": "/library",
+            "label": "Library"
+        },
+        {
+            "path": "/history",
+            "label": "History"
+        }
+    ]
+}

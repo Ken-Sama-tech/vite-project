@@ -1,0 +1,10 @@
+{
+  "content": {
+    "active": "SFW",
+    "enum": [
+      "NSFW",
+      "SFW",
+      "ANY"
+    ]
+  }
+}

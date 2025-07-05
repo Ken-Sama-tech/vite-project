@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+@import './assets/utilities.css';
+
+:root {
+  --charc: #212121;
+  --elus-charc: #212121bb;
+  --dark: #333333;
+  --gradient-blue: linear-gradient(to right, #2563eb 0%, #1e3a8a 100%);
+  --gold: #d4af37;
+  --tomato: #ff6347;
+  --bright-green: #4caf50;
+  --rose: #e35d6a;
+  --blue: #2563eb;
+  --elusive-blue: #2563ebaa;
+}
+
+* {
+  box-sizing: border-box;
+}
