@@ -330,6 +330,9 @@ function Anime() {
                   favorites: item.favourites,
                   genres: item.genres,
                 }}
+                callback={() => {
+                  window.location.href = `anime/${item.id}/`;
+                }}
               />
             </li>
           );
@@ -368,6 +371,9 @@ function Anime() {
                   entry: `Eps ${item.episodes || '???'}`,
                   aired: `${start} ${end ? `to ${end}` : ''}`,
                   genres: item.genres,
+                }}
+                callback={() => {
+                  window.location.href = `anime/${item.id}/`;
                 }}
               />
             </li>
