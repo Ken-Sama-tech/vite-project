@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import anilist from '../lib/api/anilist';
 import OutlinedButton from './buttons/OutlinedButton';
 import SubHeading from './texts/SubHeading';
 import ErrorOverlay from './overlay/ErrorOverlay';
+import { useNavigate } from 'react-router-dom';
 
 function GenreCollection({
   className = '',
@@ -12,6 +12,7 @@ function GenreCollection({
 }) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (error) {
@@ -46,36 +47,38 @@ function GenreCollection({
         className="!text-2xl w-60"
       />
 
-      <ul className="border-2 border-(--blue) w-full p-5 grid grid-cols-3 sm:grid-cols-6 md:grid-cols-9 gap-2 rounded-sm">
-        {isLoading &&
-          !error &&
-          Array.from({ length: 20 }, (_, idx) => {
-            return (
-              <li className="h-8" key={idx}>
-                <OutlinedButton className="w-full h-full" />
-              </li>
-            );
-          })}
-
-        {!isLoading && !hasError && (
-          <>
-            {genres.map((genre, idx) => {
+      {!hasError && (
+        <ul className="border-2 border-(--blue) w-full p-5 grid grid-cols-3 sm:grid-cols-6 md:grid-cols-9 gap-2 rounded-sm">
+          {isLoading &&
+            Array.from({ length: 20 }, (_, idx) => {
               return (
-                <li key={idx}>
-                  <OutlinedButton
-                    name={genre}
-                    loading={false}
-                    className="!w-full !h-full line-clamp-1"
-                    callback={() => {
-                      window.location.href = `${type}/${genre}`;
-                    }}
-                  />
+                <li className="h-8" key={idx}>
+                  <OutlinedButton className="w-full h-full" />
                 </li>
               );
             })}
-          </>
-        )}
-      </ul>
+
+          {!isLoading && (
+            <>
+              {genres.map((genre, idx) => {
+                return (
+                  <li key={idx}>
+                    <OutlinedButton
+                      name={genre}
+                      loading={false}
+                      className="!w-full !h-full line-clamp-1"
+                      callback={() => {
+                        navigate(`${type}/genres?genre=${genre}`);
+                      }}
+                    />
+                  </li>
+                );
+              })}
+            </>
+          )}
+        </ul>
+      )}
+
       {hasError && <ErrorOverlay className="!static" />}
     </div>
   );

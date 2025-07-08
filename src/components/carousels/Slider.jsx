@@ -27,19 +27,19 @@ function Slider({
       setError(true);
       setIsLoading(false);
       return;
+    } else {
+      timeOut = setTimeout(() => setError(true), 30000);
     }
 
-    timeOut = setTimeout(() => setError(true), 3000);
-
-    setTimeout(() => {
+    if (children.length > 0) {
       setIsLoading(false);
       clearTimeout(timeOut);
-    }, 1000);
+    }
 
     return () => {
       clearTimeout(timeOut);
     };
-  }, []);
+  }, [children.length]);
 
   useEffect(() => {
     if (isLoading) return;
@@ -69,7 +69,7 @@ function Slider({
       scrollLeft?.removeEventListener('click', scrollLeftHandler);
       scrollRight?.removeEventListener('click', scrollRightHandler);
     };
-  }, [isLoading]);
+  }, [isLoading, error]);
 
   return (
     <section

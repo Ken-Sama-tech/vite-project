@@ -13,6 +13,7 @@ import ScoreBadge from '../components/badges/ScoreBadge';
 import FavoriteBadge from '../components/badges/FavoriteBadge';
 import StatusBadge from '../components/badges/StatusBadge';
 import GenreCollection from '../components/GenreCollection';
+import { useNavigate } from 'react-router-dom';
 
 function Anime() {
   const [carouselImages, setCarouselImages] = useState([]);
@@ -26,6 +27,8 @@ function Anime() {
   const [top100HasError, setTop100HasError] = useState(false);
   const [genres, setGenres] = useState([]);
   const [genresHasError, setGenresHasError] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     //carousel contents
@@ -267,7 +270,7 @@ function Anime() {
         hasError={trendingHasError}
         className="mt-5"
         headers="Trending Now"
-        goto="#"
+        goto="/anime/trending"
       >
         {trendingAnime.map((item, idx) => {
           const start = Object.values(item.startDate)
@@ -299,7 +302,7 @@ function Anime() {
                   genres: item.genres,
                 }}
                 callback={() => {
-                  window.location.href = `anime/${item.id}/`;
+                  navigate(`anime?id=${item.id}`);
                 }}
               />
             </li>
@@ -331,7 +334,7 @@ function Anime() {
                   genres: item.genres,
                 }}
                 callback={() => {
-                  window.location.href = `anime/${item.id}/`;
+                  navigate(`anime?id=${item.id}`);
                 }}
               />
             </li>
@@ -373,7 +376,7 @@ function Anime() {
                   genres: item.genres,
                 }}
                 callback={() => {
-                  window.location.href = `anime/${item.id}/`;
+                  navigate(`anime?id=${item.id}`);
                 }}
               />
             </li>

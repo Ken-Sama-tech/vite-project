@@ -1,7 +1,7 @@
 import { AlertTriangle } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
-function ErrorOverlay({ className = '' }) {
+function ErrorOverlay({ className = '', message = null }) {
   const retryButtonRef = useRef(null);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function ErrorOverlay({ className = '' }) {
         <div className="flex items-center gap-3">
           <AlertTriangle className="w-6 h-6 text-red-500 shrink-0" />
           <span className="text-sm font-medium">
-            Something went wrong. Please try again.
+            {message || '  Something went wrong. Please try again.'}
           </span>
         </div>
         <button

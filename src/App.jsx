@@ -4,6 +4,9 @@ import Manga from './pages/Manga';
 import Novel from './pages/Novel';
 import History from './pages/History';
 import Library from './pages/Library';
+import AnimePage from './features/anime/pages/AnimePage';
+import BrowseByGenre from './features/anime/pages/BrowseByGenre';
+
 import { useEffect, useState } from 'react';
 
 const mainPage = new Map([
@@ -40,6 +43,11 @@ function App() {
               />
             );
           })}
+
+          <Route path="/anime" element={<AnimePage />}>
+            <Route index element={<>test</>}></Route>
+            <Route path="genres" element={<BrowseByGenre />} />
+          </Route>
         </Routes>
       )}
     </>

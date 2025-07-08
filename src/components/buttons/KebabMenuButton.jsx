@@ -31,8 +31,8 @@ function KebabMenuButton({ className = '' }) {
   }, []);
 
   return (
-    <div className={`size-auto flex items-center justify-center ${className}`}>
-      <button ref={optionButtonRef} className="h-6 w-8 cursor-pointer">
+    <div className={`size-8 flex items-center justify-center ${className}`}>
+      <button ref={optionButtonRef} className="size-full cursor-pointer">
         <EllipsisVertical color="white" className="size-full" />
       </button>
 

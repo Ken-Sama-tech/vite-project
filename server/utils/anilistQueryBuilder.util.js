@@ -22,7 +22,7 @@ const anilistQueryBuilder = async ({
         filter = 'isAdult: false'
     }
 
-    const params = mediaParams ? mediaParams.replace(/["{}]/g, '').replace(/,/g, ', ') : null;
+    const params = mediaParams ? mediaParams.replace(/["{}]/g, '').replace(/,/g, ', ').replace(/'/g, '"') : null;
 
     const newData = Array.isArray(data) ? data.join(' ') : data;
 

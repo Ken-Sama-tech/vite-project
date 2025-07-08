@@ -6,6 +6,7 @@ function OutlinedButton({
 }) {
   return (
     <button
+      title={name}
       onClick={callback}
       className={`${className} ${
         loading
