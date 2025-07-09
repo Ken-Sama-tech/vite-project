@@ -53,7 +53,7 @@ function FilterButton({
 
           <ul
             ref={optionMenuRef}
-            className="list-none w-[350px] h-auto max-h-[60vh] rm-scrollbar overflow-y-auto absolute top-full right-0 shadow-2xl rounded-md bg-(--charc) hidden grid-cols-3 gap-x-1 p-2"
+            className="list-none z-99 w-[350px] h-auto max-h-[60vh] rm-scrollbar overflow-y-auto absolute top-full right-0 shadow-2xl rounded-md bg-(--charc) hidden grid-cols-3 gap-x-1 p-2"
           >
             {options.length > 0 && (
               <>

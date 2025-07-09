@@ -1,6 +1,6 @@
 const anilistQueryBuilder = (params) => {
     const {
-        name = [], data = [], mediaParams = {}, page = 1, limit = 0
+        name = [], data = [], mediaParams = {}, page = 1, limit = 0, pageInfo = false
     } = params;
 
     if (!data.length) {
@@ -30,7 +30,7 @@ const anilistQueryBuilder = (params) => {
 
     limit ? typeof limit == 'number' ? tempQuery += `&limit=${limit}&page=${page}` : console.warn('Invalid limit value. Limit should only be a number') : '';
 
-    tempQuery += `&mediaParams=${encodeURIComponent(media)}`;
+    tempQuery += `&mediaParams=${encodeURIComponent(media)}${pageInfo ? '&pageInfo=true': ''}`;
 
     tempQuery = tempQuery.replace(/,/g, '&');
 

@@ -6,7 +6,7 @@ function AnimePage() {
   const genre = searchParams.get('genre');
 
   return (
-    <SecondaryLayout heading={genre ? 'Browse by Genre' : 'Anime'}>
+    <SecondaryLayout heading={genre ? 'Browse by Genre' : 'Anime'} goto="/">
       <Outlet />
     </SecondaryLayout>
   );

@@ -69,6 +69,7 @@ function GenreCollection({
                       className="!w-full !h-full line-clamp-1"
                       callback={() => {
                         navigate(`${type}/genres?genre=${genre}`);
+                        window.scrollTo(0, 0);
                       }}
                     />
                   </li>

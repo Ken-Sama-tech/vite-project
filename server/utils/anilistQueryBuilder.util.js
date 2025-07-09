@@ -6,9 +6,9 @@ const anilistQueryBuilder = async ({
     data = [],
     mediaParams = '',
     limit = 10,
-    page = 1
+    page = 1,
+    pageInfo = false
 }) => {
-
     let tempQuery = '';
 
     const settings = await axios.get(settingsUrl);
@@ -33,9 +33,12 @@ const anilistQueryBuilder = async ({
         });
     }
 
+    const isPageInfoBool = pageInfo === 'true' ? true : false;
+    const pInfoQuery = 'pageInfo {total currentPage lastPage hasNextPage perPage}';
+
     const media = name.length ? isNameProvided() : `media(${params} ${filter ? `,${filter}` :''}){${newData}}`;
 
-    tempQuery += !name.length ? `query {Page(page: ${page}, perPage: ${limit}) {${media}}}` : `query {${media} }`;
+    tempQuery += !name.length ? `query {Page (page: ${page}, perPage: ${limit}) { ${isPageInfoBool ? pInfoQuery : ''} ${media}}}` : `query {${media} }`;
 
     return tempQuery;
 }

@@ -30,7 +30,7 @@ class Anilist {
 
     getAnime = async (params = {}, cb = () => {}) => {
         // const {
-        //     name = [], data = [], mediaParams = {}, page = 1, limit = 0
+        //     name = [], data = [], mediaParams = {}, page = 1, limit = 0, pageInfo = false
         // } = params;
 
         const query = anilistQueryBuilder(params);

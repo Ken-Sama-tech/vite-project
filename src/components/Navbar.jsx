@@ -86,7 +86,7 @@ function Navbar() {
       </ul>
 
       <Searchbar className="absolute right-10 !w-50 md:!w-60" />
-      <KebabMenuButton className="absolute right-1" />
+      <KebabMenuButton className="absolute right-1 !h-6" />
     </nav>
   );
 }

@@ -5,39 +5,31 @@ import FilterButton from '../../../components/buttons/FilterButton';
 import KebabMenuButton from '../../../components/buttons/KebabMenuButton';
 import OutlinedButton from '../../../components/buttons/OutlinedButton';
 import { useNavigate } from 'react-router-dom';
+import MediaCard from '../../../components/cards/MediaCard';
 
 function BrowseByGenre() {
-  const [genres, setGenres] = useState([]);
-  const [genresHasError, setGenresHasError] = useState(false);
   const [searchParams] = useSearchParams();
-  const [filter, setFilter] = useState([]);
-  const [anime, setAnime] = useState([]);
-  const [animeHasError, setAnimeHasError] = useState(false);
-
-  const navigate = useNavigate();
   const genre = searchParams.getAll('genre');
 
-  useEffect(() => {
-    anilist.getGenreCollection((res) => {
-      const { data, error } = res;
+  const [genres, setGenres] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(genre || []);
+  const [filter, setFilter] = useState(genre || []);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [hasMore, setHasMore] = useState(false);
+  const [anime, setAnime] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
-      if (error) {
-        console.error('Error:', res);
-        setGenresHasError(true);
-        return;
-      }
-
-      const genres = data?.GenreCollection;
-      setGenres(genres);
-      console.log(genre);
-    });
-
-    setFilter(genre);
-  }, []);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const formattedFilter = filter.map((item) => `'${item}'`);
+    setAnime([]);
+  }, [filter]);
 
+  useEffect(() => {
+    setIsLoading(true);
+
+    const formattedGenre = filter.map((item) => `'${item}'`);
     anilist.getAnime(
       {
         data: [
@@ -54,37 +46,54 @@ function BrowseByGenre() {
           'episodes',
           'genres',
         ],
-        mediaParams: { genre_in: formattedFilter },
+        mediaParams: { genre_in: formattedGenre, sort: ['SCORE_DESC'] },
         limit: 20,
+        pageInfo: true,
       },
       (res) => {
         const { error, data } = res;
 
         if (error) {
           console.error('Error', res);
-          setAnimeHasError(true);
+          setError(true);
           return;
         }
-
-        console.log(data);
-
-        const anime = data.Page.media;
-        setAnime(anime);
+        setAnime((prev) => [...prev, ...data?.Page.media]);
+        setHasMore(data.Page.pageInfo.hasNextPage);
+        setIsLoading(false);
       }
     );
-  }, [filter]);
+  }, [filter, currentPage]);
+
+  useEffect(() => {
+    anilist.getGenreCollection((res) => {
+      const { data, error } = res;
+
+      if (error) {
+        console.error('Error:', res);
+        return;
+      }
+
+      const genres = data?.GenreCollection;
+      setGenres(genres);
+    });
+
+    setSelectedOption(genre);
+    setFilter(genre);
+  }, []);
 
   return (
     <>
-      <div className="h-auto py-2 px-1 w-full">
+      <div className="h-auto py-2 px-1 w-full flex flex-col">
         <div className="h-auto w-full flex items-center justify-end px-2 relative gap-x-1">
           <OutlinedButton
             className="h-8 me-1"
             loading={false}
             name="Save"
             callback={() => {
+              setFilter([...selectedOption]);
               navigate(
-                `?${filter
+                `/anime/genres?${selectedOption
                   .map((item) => {
                     return `genre=${item}`;
                   })
@@ -103,9 +112,11 @@ function BrowseByGenre() {
               const value = Object.values(obj)[0];
 
               if (value) {
-                setFilter((prev) => [...prev, key]);
+                setSelectedOption((prev) => [...prev, key]);
               } else {
-                setFilter((prev) => prev.filter((item) => item !== key));
+                setSelectedOption((prev) =>
+                  prev.filter((item) => item !== key)
+                );
               }
             }}
           />
@@ -113,8 +124,65 @@ function BrowseByGenre() {
           <KebabMenuButton className="!h-7" />
         </div>
       </div>
+      <ul className="bg-(--dark) w-full list-none grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 p-3">
+        {isLoading &&
+          !error &&
+          Array.from({ length: 20 }, (item, idx) => {
+            return (
+              <li key={idx}>
+                <MediaCard loading={true} />
+              </li>
+            );
+          })}
+        {!isLoading && !error && (
+          <>
+            {anime.length <= 0 && (
+              <div className="col-span-6 min-h-dvh">
+                <h2 className="text-white font-bold text-3xl text-center w-full">
+                  No Result Found
+                </h2>
+              </div>
+            )}
 
-      <div className="border border-white"></div>
+            {anime.length >= 1 &&
+              anime.map((item, idx) => {
+                const start = Object.values(item.startDate)
+                  .filter(Boolean)
+                  .map(String)
+                  .join('/');
+                const end = Object.values(item.endDate)
+                  .filter(Boolean)
+                  .map(String)
+                  .join('/');
+                return (
+                  <li key={idx}>
+                    <MediaCard
+                      loading={false}
+                      params={{
+                        image: item.coverImage.extraLarge,
+                        title:
+                          item.title.english ||
+                          item.title.romaji ||
+                          item.title.native,
+                        alt: [item.title.romaji, item.title.native],
+                        format: item.format,
+                        status: item.status,
+                        score: item.meanScore,
+                        favorites: item.favourites,
+                        entry: `Eps ${item.episodes || '???'}`,
+                        aired: `${start} ${end ? `to ${end}` : ''}`,
+                        genres: item.genres,
+                      }}
+                      callback={() => {
+                        navigate(`/anime?id=${item.id}`);
+                      }}
+                    />
+                  </li>
+                );
+              })}
+          </>
+        )}
+      </ul>
     </>
   );
 }
