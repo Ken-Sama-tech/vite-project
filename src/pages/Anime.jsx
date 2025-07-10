@@ -15,6 +15,8 @@ import StatusBadge from '../components/badges/StatusBadge';
 import GenreCollection from '../components/GenreCollection';
 import { useNavigate } from 'react-router-dom';
 
+const animeDetailUrl = '/anime/detail';
+
 function Anime() {
   const [carouselImages, setCarouselImages] = useState([]);
   const [carouselHasError, setCarouselHasError] = useState(false);
@@ -302,7 +304,7 @@ function Anime() {
                   genres: item.genres,
                 }}
                 callback={() => {
-                  navigate(`anime?id=${item.id}`);
+                  navigate(`${animeDetailUrl}?id=${item.id}`);
                 }}
               />
             </li>
@@ -334,7 +336,7 @@ function Anime() {
                   genres: item.genres,
                 }}
                 callback={() => {
-                  navigate(`anime?id=${item.id}`);
+                  navigate(`${animeDetailUrl}?id=${item.id}`);
                 }}
               />
             </li>
@@ -376,7 +378,7 @@ function Anime() {
                   genres: item.genres,
                 }}
                 callback={() => {
-                  navigate(`anime?id=${item.id}`);
+                  navigate(`${animeDetailUrl}?id=${item.id}`);
                 }}
               />
             </li>

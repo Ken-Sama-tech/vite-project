@@ -6,7 +6,7 @@ const throttle = (cb, delay = 1000) => {
 
         if (now - lastCall >= delay) {
             lastCall = now;
-            cb.apply(this, args);
+            cb(...args);
         }
     };
 };

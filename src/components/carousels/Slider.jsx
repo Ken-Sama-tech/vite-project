@@ -76,26 +76,30 @@ function Slider({
       aria-label="card slider"
       className={`bg-(--dark) h-[50vh] p-2 flex flex-col relative ${className}`}
     >
-      <div className="w-full flex items-center justify-between">
-        <SubHeading className="!text-2xl" text={headers} loading={isLoading} />
-        {hasMore && (
-          <>
-            <Link
-              to={goto}
-              className={`${
-                isLoading
-                  ? 'skeleton-load py-3 px-10'
-                  : 'text-(--blue) font-semibold transition-all duration-200 ease-in hover:underline hover:opacity-90'
-              }`}
-            >
-              {!isLoading && 'See More'}
-            </Link>
-          </>
-        )}
-      </div>
-
       {!error && (
         <>
+          <div className="w-full flex items-center justify-between">
+            <SubHeading
+              className="!text-2xl"
+              text={headers}
+              loading={isLoading}
+            />
+            {hasMore && (
+              <>
+                <Link
+                  to={goto}
+                  className={`${
+                    isLoading
+                      ? 'skeleton-load py-3 px-10'
+                      : 'text-(--blue) font-semibold transition-all duration-200 ease-in hover:underline hover:opacity-90'
+                  }`}
+                >
+                  {!isLoading && 'See More'}
+                </Link>
+              </>
+            )}
+          </div>
+
           <div className="flex relative grow-1 w-full px-10">
             {isLoading && (
               <div className="w-full flex gap-6 px-0 pb-2 pt-3 justify-center">

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import anilist from '../../../lib/api/anilist';
 import { useSearchParams } from 'react-router-dom';
 import FilterButton from '../../../components/buttons/FilterButton';
@@ -6,6 +6,10 @@ import KebabMenuButton from '../../../components/buttons/KebabMenuButton';
 import OutlinedButton from '../../../components/buttons/OutlinedButton';
 import { useNavigate } from 'react-router-dom';
 import MediaCard from '../../../components/cards/MediaCard';
+import CardContainer from '../../../layouts/CardContainer';
+import useObserver from '../../../lib/hooks/useObserver';
+import throttle from '../../../lib/utils/throttle';
+import ErrorOverlay from '../../../components/overlay/ErrorOverlay';
 
 function BrowseByGenre() {
   const [searchParams] = useSearchParams();
@@ -22,8 +26,17 @@ function BrowseByGenre() {
 
   const navigate = useNavigate();
 
+  const lastVisibleCardRef = useObserver(
+    throttle(() => {
+      if (isLoading) return;
+      if (hasMore) setCurrentPage((prev) => prev + 1);
+    }),
+    [isLoading]
+  );
+
   useEffect(() => {
     setAnime([]);
+    setCurrentPage(1);
   }, [filter]);
 
   useEffect(() => {
@@ -47,7 +60,8 @@ function BrowseByGenre() {
           'genres',
         ],
         mediaParams: { genre_in: formattedGenre, sort: ['SCORE_DESC'] },
-        limit: 20,
+        limit: 30,
+        page: currentPage,
         pageInfo: true,
       },
       (res) => {
@@ -58,8 +72,9 @@ function BrowseByGenre() {
           setError(true);
           return;
         }
-        setAnime((prev) => [...prev, ...data?.Page.media]);
+
         setHasMore(data.Page.pageInfo.hasNextPage);
+        setAnime((prev) => [...prev, ...data?.Page.media]);
         setIsLoading(false);
       }
     );
@@ -77,14 +92,11 @@ function BrowseByGenre() {
       const genres = data?.GenreCollection;
       setGenres(genres);
     });
-
-    setSelectedOption(genre);
-    setFilter(genre);
   }, []);
 
   return (
     <>
-      <div className="h-auto py-2 px-1 w-full flex flex-col">
+      <div className="h-full py-2 px-1 w-full relative flex flex-col">
         <div className="h-auto w-full flex items-center justify-end px-2 relative gap-x-1">
           <OutlinedButton
             className="h-8 me-1"
@@ -123,27 +135,8 @@ function BrowseByGenre() {
 
           <KebabMenuButton className="!h-7" />
         </div>
-      </div>
-      <ul className="bg-(--dark) w-full list-none grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 p-3">
-        {isLoading &&
-          !error &&
-          Array.from({ length: 20 }, (item, idx) => {
-            return (
-              <li key={idx}>
-                <MediaCard loading={true} />
-              </li>
-            );
-          })}
-        {!isLoading && !error && (
-          <>
-            {anime.length <= 0 && (
-              <div className="col-span-6 min-h-dvh">
-                <h2 className="text-white font-bold text-3xl text-center w-full">
-                  No Result Found
-                </h2>
-              </div>
-            )}
-
+        {!error && (
+          <CardContainer className="!h-full overflow-y-auto rm-scrollbar">
             {anime.length >= 1 &&
               anime.map((item, idx) => {
                 const start = Object.values(item.startDate)
@@ -154,8 +147,14 @@ function BrowseByGenre() {
                   .filter(Boolean)
                   .map(String)
                   .join('/');
+                const isLast = anime.length === idx + 1 ? true : false;
+
                 return (
-                  <li key={idx}>
+                  <li
+                    className="max-h-[350px]"
+                    key={idx}
+                    {...(isLast ? { ref: lastVisibleCardRef } : {})}
+                  >
                     <MediaCard
                       loading={false}
                       params={{
@@ -180,9 +179,27 @@ function BrowseByGenre() {
                   </li>
                 );
               })}
-          </>
+
+            {isLoading &&
+              Array.from({ length: 20 }, (_, idx) => {
+                return (
+                  <li key={idx} className="max-h-[350px]">
+                    <MediaCard loading={true} />
+                  </li>
+                );
+              })}
+
+            {!isLoading && anime.length <= 0 && (
+              <div className="col-span-6 min-h-dvh">
+                <h2 className="text-white font-bold text-3xl text-center w-full">
+                  No Result Found
+                </h2>
+              </div>
+            )}
+          </CardContainer>
         )}
-      </ul>
+        {error && <ErrorOverlay />}
+      </div>
     </>
   );
 }

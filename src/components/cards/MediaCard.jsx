@@ -40,6 +40,7 @@ function MediaCard({
   const [tooltipPosition, setTooltipPosition] = useState('');
 
   const cardRef = useRef(null);
+  const getDetailsRef = useRef(null);
 
   useEffect(() => {
     let timeout;
@@ -81,6 +82,7 @@ function MediaCard({
     if (isLoading) return;
 
     const card = cardRef?.current;
+    const getDetail = getDetailsRef?.current;
     const allowedSs = 980;
     if (screenSize < allowedSs && tooltip) {
       setShowTooltip(false);
@@ -100,12 +102,12 @@ function MediaCard({
 
     card?.addEventListener('mouseenter', inHover);
     card?.addEventListener('mouseleave', notInHover);
-    card?.addEventListener('click', callback);
+    getDetail?.addEventListener('click', callback);
 
     return () => {
       card?.removeEventListener('click', callback);
       card?.removeEventListener('mouseenter', inHover);
-      card?.removeEventListener('mouseleave', notInHover);
+      getDetail?.removeEventListener('mouseleave', notInHover);
     };
   }, [screenSize, isLoading]);
 
@@ -136,6 +138,7 @@ function MediaCard({
           className={`group cursor-pointer h-full aspect-[2/3] rounded-md relative snap-center shrink-0 ${className}`}
         >
           <div
+            ref={getDetailsRef}
             className={`h-full w-full relative overflow-hidden rounded-md ${
               isInHover && 'blur-effect'
             }`}

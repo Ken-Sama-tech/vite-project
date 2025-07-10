@@ -47,6 +47,7 @@ function App() {
           <Route path="/anime" element={<AnimePage />}>
             <Route index element={<>test</>}></Route>
             <Route path="genres" element={<BrowseByGenre />} />
+            <Route path="detail" element />
           </Route>
         </Routes>
       )}
