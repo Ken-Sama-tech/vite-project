@@ -14,17 +14,23 @@ class Settings {
                 throw new Error(`Can't find an option in the settings with name "${name}"`)
             }
 
-            cb({
+            const res = {
                 status: 200,
                 message: 'fetch success',
                 data: data
-            });
+            }
+
+            cb(res);
+            return res
         } catch (err) {
-            cb({
+            const res = {
                 error: true,
                 status: err.status || 400,
                 message: err.message || err
-            })
+            }
+
+            cb(res)
+            return res
         }
 
     }
@@ -44,12 +50,18 @@ class Settings {
             cb({
                 ...res
             })
+
+            return {
+                ...res
+            }
         } catch (err) {
-            cb({
+            const res = {
                 error: true,
                 message: err.message || err,
                 status: err.status || 400
-            })
+            }
+            cb(res)
+            return res
         }
     }
 }

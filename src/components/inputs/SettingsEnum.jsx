@@ -1,10 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import settings from '../../lib/api/settings';
 
-function SettingsEnum({ name, label = 'Default', className = '' }) {
+function SettingsEnum({
+  name,
+  label = 'Default',
+  className = '',
+  useAlias = false,
+}) {
   //only works on settings and with enum options
   const [options, setOptions] = useState([]);
   const [activeValue, setActiveValue] = useState('');
+  const [alias, setAlias] = useState(null);
+  const [fields, setFields] = useState({});
 
   useEffect(() => {
     settings.get(name, (res) => {
@@ -20,6 +27,8 @@ function SettingsEnum({ name, label = 'Default', className = '' }) {
         return;
       }
 
+      if (useAlias && data.alias.length) setAlias(new Map(data.alias));
+      setFields({ ...data });
       setOptions(data.enum);
       setActiveValue(data.active);
     });
@@ -31,8 +40,8 @@ function SettingsEnum({ name, label = 'Default', className = '' }) {
       const field = name;
       const obj = {
         [field]: {
+          ...fields,
           active: newValue,
-          enum: options,
         },
       };
 
@@ -64,11 +73,11 @@ function SettingsEnum({ name, label = 'Default', className = '' }) {
           setActiveValue(e.target.value);
           updateSettings(e.target.value);
         }}
-        className={`text-white text-sm border border-white bg-transparent shrink-0 rounded-md ${className}`}
+        className={`text-white text-sm border border-white bg-transparent shrink-0 rounded-md uppercase ${className}`}
       >
         {options.map((opt, idx) => (
-          <option key={idx} value={opt} className="text-black w-full">
-            {opt}
+          <option key={idx} value={opt} className="text-black w-full uppercase">
+            {useAlias && alias ? alias.get(opt) : opt}
           </option>
         ))}
       </select>

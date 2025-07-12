@@ -2,7 +2,7 @@ import { EllipsisVertical } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import SettingsEnum from '../inputs/SettingsEnum';
 
-function KebabMenuButton({ className = '' }) {
+function KebabMenuButton({ className = '', AddToMenu = {} }) {
   const optionListRef = useRef(null);
   const optionButtonRef = useRef(null);
 
@@ -43,6 +43,15 @@ function KebabMenuButton({ className = '' }) {
         <li className="flex items-center justify-between">
           <SettingsEnum name="content" label="Content" className="w-1/2" />
         </li>
+
+        {AddToMenu.length &&
+          AddToMenu.map((item, idx) => {
+            return (
+              <li key={idx} className="flex items-center justify-between">
+                {item}
+              </li>
+            );
+          })}
       </ul>
     </div>
   );

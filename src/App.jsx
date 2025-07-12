@@ -6,6 +6,8 @@ import History from './pages/History';
 import Library from './pages/Library';
 import AnimePage from './features/anime/pages/AnimePage';
 import BrowseByGenre from './features/anime/pages/BrowseByGenre';
+import AnimeList from './features/anime/components/AnimeList';
+import AnimeDetail from './features/anime/pages/AnimeDetail';
 
 import { useEffect, useState } from 'react';
 
@@ -45,9 +47,9 @@ function App() {
           })}
 
           <Route path="/anime" element={<AnimePage />}>
-            <Route index element={<>test</>}></Route>
+            <Route index element={<AnimeList />}></Route>
             <Route path="genres" element={<BrowseByGenre />} />
-            <Route path="detail" element />
+            <Route path=":id/:slug?" element={<AnimeDetail />} />
           </Route>
         </Routes>
       )}

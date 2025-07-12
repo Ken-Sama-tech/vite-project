@@ -6,5 +6,27 @@
       "SFW",
       "ANY"
     ]
+  },
+  "sort": {
+    "active": "SCORE_DESC",
+    "alias": [
+      [
+        "SCORE_DESC",
+        "score"
+      ],
+      [
+        "POPULARITY_DESC",
+        "popularity"
+      ],
+      [
+        "TRENDING_DESC",
+        "trending"
+      ]
+    ],
+    "enum": [
+      "SCORE_DESC",
+      "POPULARITY_DESC",
+      "TRENDING_DESC"
+    ]
   }
 }

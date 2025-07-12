@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import ScoreBadge from '../badges/ScoreBadge';
 import SubHeading from '../texts/SubHeading';
 import EntryBadge from '../badges/EntryBadge';
-import throttle from '../../lib/utils/throttle';
+import CardErrorOverlay from '../overlay/CardErrorOverlay';
 import debounce from '../../lib/utils/debounce';
 import { Play } from 'lucide-react';
 import MediaCardTooltip from '../tooltips/MediaCardTooltip';
@@ -191,16 +191,7 @@ function MediaCard({
         </div>
       )}
 
-      {error && !isLoading && (
-        <div className="aspect-[2/3] h-full rounded-lg flex items-center justify-center bg-neutral-800 shadow-[2px_2px_10px_rgba(0,0,0,0.4)]">
-          <div className="flex items-center gap-2 border border-red-400 bg-red-400/10 px-3 py-2 rounded-md">
-            <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
-            <span className="text-sm text-red-100 font-medium">
-              Failed to load media
-            </span>
-          </div>
-        </div>
-      )}
+      {error && !isLoading && <CardErrorOverlay />}
     </>
   );
 }

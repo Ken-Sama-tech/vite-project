@@ -14,8 +14,7 @@ import FavoriteBadge from '../components/badges/FavoriteBadge';
 import StatusBadge from '../components/badges/StatusBadge';
 import GenreCollection from '../components/GenreCollection';
 import { useNavigate } from 'react-router-dom';
-
-const animeDetailUrl = '/anime/detail';
+import { slugify } from '../lib/utils/utils';
 
 function Anime() {
   const [carouselImages, setCarouselImages] = useState([]);
@@ -199,6 +198,8 @@ function Anime() {
         hasError={carouselHasError}
         renderDecoration={(idx, isLoading) => {
           const dec = carouselDecs[idx];
+          const title =
+            dec?.title.english || dec?.title.romaji || dec?.title.native;
           return (
             <div className="absolute h-[90%] w-[80%] flex flex-col items-start top-0 left-1/2 -translate-x-1/2 md:w-[85%] z-3">
               <GradientBlueBadge
@@ -208,7 +209,7 @@ function Anime() {
               />
               <Heading
                 className="mt-2 md:mt-5"
-                text={dec?.title.english}
+                text={title}
                 loading={isLoading ? true : false}
               ></Heading>
               <span className="flex gap-2 line-clamp-1">
@@ -251,14 +252,14 @@ function Anime() {
               <div className="flex gap-2 mt-2 md:mt-5">
                 <ShowDetailButton
                   loading={isLoading ? true : false}
-                  goto={`anime/${dec?.id}/`}
+                  goto={`anime/${dec?.id}/${slugify(title)}`}
                 />
                 <BookmarkButton
                   loading={isLoading ? true : false}
                   type="anime"
                   params={{
                     id: dec?.id,
-                    title: dec?.title.english,
+                    title: title,
                     alternative: [dec?.title.romaji, dec?.title.native],
                     imageUrl: dec?.coverImage.extraLarge,
                   }}
@@ -272,9 +273,11 @@ function Anime() {
         hasError={trendingHasError}
         className="mt-5"
         headers="Trending Now"
-        goto="/anime/trending"
+        goto="/anime?sort=TRENDING_DESC"
       >
         {trendingAnime.map((item, idx) => {
+          const title =
+            item.title.english || item.title.romaji || item.title.native;
           const start = Object.values(item.startDate)
             .filter(Boolean)
             .map(String)
@@ -290,10 +293,7 @@ function Anime() {
                 loading={false}
                 params={{
                   image: item.coverImage.extraLarge,
-                  title:
-                    item.title.english ||
-                    item.title.romaji ||
-                    item.title.native,
+                  title: title,
                   alt: [item.title.romaji, item.title.native],
                   format: item.format,
                   status: item.status,
@@ -304,7 +304,7 @@ function Anime() {
                   genres: item.genres,
                 }}
                 callback={() => {
-                  navigate(`${animeDetailUrl}?id=${item.id}`);
+                  navigate(`anime/${item.id}/${slugify(title)}`);
                 }}
               />
             </li>
@@ -314,20 +314,19 @@ function Anime() {
       <Slider
         className="mt-5"
         hasError={upcomingHasError}
-        goto="#"
+        goto="/anime?sort=POPULARITY_DESC&status=NOT_YET_RELEASED"
         headers="Top Upcoming"
       >
         {upcomingAnime.map((item, idx) => {
+          const title =
+            item.title.english || item.title.romaji || item.title.native;
           return (
             <li key={idx}>
               <MediaCard
                 loading={false}
                 params={{
                   image: item.coverImage.extraLarge,
-                  title:
-                    item.title.english ||
-                    item.title.romaji ||
-                    item.title.native,
+                  title: title,
                   alt: [item.title.romaji, item.title.native],
                   format: item.format,
                   status: item.status,
@@ -336,7 +335,7 @@ function Anime() {
                   genres: item.genres,
                 }}
                 callback={() => {
-                  navigate(`${animeDetailUrl}?id=${item.id}`);
+                  navigate(`anime/${item.id}/${slugify(title)}`);
                 }}
               />
             </li>
@@ -347,9 +346,11 @@ function Anime() {
         hasError={top100HasError}
         className="mt-5"
         headers="Top Anime"
-        goto="#"
+        goto="/anime?sort=SCORE_DESC"
       >
         {top100.map((item, idx) => {
+          const title =
+            item.title.english || item.title.romaji || item.title.native;
           const start = Object.values(item.startDate)
             .filter(Boolean)
             .map(String)
@@ -364,10 +365,7 @@ function Anime() {
                 loading={false}
                 params={{
                   image: item.coverImage.extraLarge,
-                  title:
-                    item.title.english ||
-                    item.title.romaji ||
-                    item.title.native,
+                  title: title,
                   alt: [item.title.romaji, item.title.native],
                   format: item.format,
                   status: item.status,
@@ -378,7 +376,7 @@ function Anime() {
                   genres: item.genres,
                 }}
                 callback={() => {
-                  navigate(`${animeDetailUrl}?id=${item.id}`);
+                  navigate(`anime/${item.id}/${slugify(title)}`);
                 }}
               />
             </li>

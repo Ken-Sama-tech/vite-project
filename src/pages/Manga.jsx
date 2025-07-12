@@ -1,10 +1,12 @@
 import MainLayout from '../layouts/MainLayout';
-import GenreCollection from '../components/GenreCollection';
+import AnimeList from '../features/anime/components/AnimeList';
 
 function Manga() {
   return (
     <MainLayout>
-      <div className="h-dvh"></div>
+      <div className="h-dvh">
+        <AnimeList />
+      </div>
     </MainLayout>
   );
 }
