@@ -3,6 +3,7 @@ function OutlinedButton({
   loading = true,
   name = 'button',
   callback = () => {},
+  children,
 }) {
   return (
     <button
@@ -14,7 +15,7 @@ function OutlinedButton({
           : 'border border-(--blue) px-2 py-1 text-white rounded-xl cursor-pointer transition-all duration-300 ease-out hover:border-transparent hover:bg-(--elusive-blue)'
       }`}
     >
-      {!loading && name}
+      {!loading && (children || name)}
     </button>
   );
 }

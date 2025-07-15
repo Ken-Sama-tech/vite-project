@@ -6,8 +6,8 @@ function FavoriteBadge({ className = '', favorite = 0, loading = true }) {
       className={`${
         loading
           ? 'skeleton-load px-15 py-3'
-          : 'w-auto h-8 bg-(--tomato) px-2 py-1'
-      } rounded-full flex items-center justify-center gap-1 ${className}`}
+          : `w-auto h-8 bg-(--tomato) px-2 py-1 ${className}`
+      } rounded-full flex items-center justify-center gap-1`}
     >
       {!loading && (
         <>

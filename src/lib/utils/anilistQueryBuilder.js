@@ -14,8 +14,8 @@ const anilistQueryBuilder = (params) => {
         if (typeof n == 'object') {
             const string = JSON.stringify(n)
                 .replace(/[{}:"]/g, '')
-                .replace('[', '{')
-                .replace(']', '}')
+                .replace(/\[/g, '{')
+                .replace(/\]/g, '}')
                 .replace(/,/g, ' ')
 
             return `data=${string}`;

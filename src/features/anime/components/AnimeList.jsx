@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import ErrorOverlay from '../../../components/overlay/ErrorOverlay';
 import throttle from '../../../lib/utils/throttle';
-import { slugify } from '../../../lib/utils/utils';
+import { slugify, formatDate } from '../../../lib/utils/utils';
 
 function AnimeList() {
   const [animeList, setAnimeList] = useState([]);
@@ -52,10 +52,12 @@ function AnimeList() {
       {
         data: [
           'id',
-          { title: ['english', 'romaji', 'native'] },
-          { coverImage: ['extraLarge'] },
-          { startDate: ['day', 'month', 'year'] },
-          { endDate: ['day', 'month', 'year'] },
+          {
+            title: ['english', 'romaji', 'native'],
+            coverImage: ['extraLarge'],
+            startDate: ['day', 'month', 'year'],
+            endDate: ['day', 'month', 'year'],
+          },
           'popularity',
           'favourites',
           'meanScore',
@@ -88,19 +90,25 @@ function AnimeList() {
   return (
     <>
       {!error && (
-        <CardContainer className="!h-full overflow-y-auto rm-scrollbar">
+        <CardContainer className="!h-full overflow-y-auto rm-scrollbar items-center">
           {animeList.length >= 1 &&
             animeList.map((item, idx) => {
               const title =
                 item.title.english || item.title.romaji || item.title.native;
-              const start = Object.values(item.startDate)
-                .filter(Boolean)
-                .map(String)
-                .join('/');
-              const end = Object.values(item.endDate)
-                .filter(Boolean)
-                .map(String)
-                .join('/');
+
+              const s = item.startDate;
+              const e = item.endDate;
+              const start = formatDate({
+                day: s.day,
+                month: s.month,
+                year: s.year,
+              });
+              const end = formatDate({
+                day: e.day,
+                month: e.month,
+                year: e.year,
+              });
+
               const isLast = animeList.length === idx + 1 ? true : false;
 
               return (

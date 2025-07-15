@@ -9,13 +9,9 @@ function StatusBadge({
         loading
           ? 'skeleton-load px-15 py-3'
           : 'bg-(--bright-green) h-8 px-2 py-1'
-      } rounded-full ${className}`}
+      } rounded-full text-white ${className}`}
     >
-      {!loading && (
-        <>
-          <span className="text-white font-semibold">{status}</span>
-        </>
-      )}
+      {!loading && status}
     </div>
   );
 }

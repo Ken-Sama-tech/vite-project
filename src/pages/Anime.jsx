@@ -14,7 +14,7 @@ import FavoriteBadge from '../components/badges/FavoriteBadge';
 import StatusBadge from '../components/badges/StatusBadge';
 import GenreCollection from '../components/GenreCollection';
 import { useNavigate } from 'react-router-dom';
-import { slugify } from '../lib/utils/utils';
+import { slugify, formatDate } from '../lib/utils/utils';
 
 function Anime() {
   const [carouselImages, setCarouselImages] = useState([]);
@@ -37,14 +37,16 @@ function Anime() {
       {
         data: [
           'id',
-          { title: ['english', 'romaji', 'native'] },
+          {
+            title: ['english', 'romaji', 'native'],
+            coverImage: ['extraLarge'],
+          },
           'bannerImage',
           'description',
           'meanScore',
           'popularity',
           'favourites',
           'status',
-          { coverImage: ['extraLarge'] },
         ],
         mediaParams: {
           sort: 'POPULARITY_DESC',
@@ -75,10 +77,12 @@ function Anime() {
       {
         data: [
           'id',
-          { title: ['english', 'romaji', 'native'] },
-          { coverImage: ['extraLarge'] },
-          { startDate: ['day', 'month', 'year'] },
-          { endDate: ['day', 'month', 'year'] },
+          {
+            title: ['english', 'romaji', 'native'],
+            coverImage: ['extraLarge'],
+            startDate: ['day', 'month', 'year'],
+            endDate: ['day', 'month', 'year'],
+          },
           'popularity',
           'favourites',
           'meanScore',
@@ -109,10 +113,10 @@ function Anime() {
       {
         data: [
           'id',
-          { title: ['english', 'romaji', 'native'] },
-          { coverImage: ['extraLarge'] },
-          { startDate: ['day', 'month', 'year'] },
-          { endDate: ['day', 'month', 'year'] },
+          {
+            title: ['english', 'romaji', 'native'],
+            coverImage: ['extraLarge'],
+          },
           'popularity',
           'favourites',
           'meanScore',
@@ -145,10 +149,12 @@ function Anime() {
       {
         data: [
           'id',
-          { title: ['english', 'romaji', 'native'] },
-          { coverImage: ['extraLarge'] },
-          { startDate: ['day', 'month', 'year'] },
-          { endDate: ['day', 'month', 'year'] },
+          {
+            title: ['english', 'romaji', 'native'],
+            coverImage: ['extraLarge'],
+            startDate: ['day', 'month', 'year'],
+            endDate: ['day', 'month', 'year'],
+          },
           'episodes',
           'popularity',
           'favourites',
@@ -278,14 +284,15 @@ function Anime() {
         {trendingAnime.map((item, idx) => {
           const title =
             item.title.english || item.title.romaji || item.title.native;
-          const start = Object.values(item.startDate)
-            .filter(Boolean)
-            .map(String)
-            .join('/');
-          const end = Object.values(item.endDate)
-            .filter(Boolean)
-            .map(String)
-            .join('/');
+          const s = item.startDate;
+          const e = item.endDate;
+
+          const start = formatDate({
+            day: s.day,
+            month: s.month,
+            year: s.year,
+          });
+          const end = formatDate({ day: e.day, month: e.month, year: e.year });
 
           return (
             <li key={idx}>
@@ -300,7 +307,7 @@ function Anime() {
                   score: item.meanScore,
                   favorites: item.favourites,
                   entry: `Eps ${item.episodes || '???'}`,
-                  aired: `${start} ${end ? `to ${end}` : ''}`,
+                  aired: `${start || ''} ${end ? `to ${end}` : ''}`,
                   genres: item.genres,
                 }}
                 callback={() => {
@@ -351,14 +358,15 @@ function Anime() {
         {top100.map((item, idx) => {
           const title =
             item.title.english || item.title.romaji || item.title.native;
-          const start = Object.values(item.startDate)
-            .filter(Boolean)
-            .map(String)
-            .join('/');
-          const end = Object.values(item.endDate)
-            .filter(Boolean)
-            .map(String)
-            .join('/');
+          const s = item.startDate;
+          const e = item.endDate;
+
+          const start = formatDate({
+            day: s.day,
+            month: s.month,
+            year: s.year,
+          });
+          const end = formatDate({ day: e.day, month: e.month, year: e.year });
           return (
             <li key={idx}>
               <MediaCard

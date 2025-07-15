@@ -11,7 +11,7 @@ function BookmarkButton({
 }) {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [bookmarkedAnime, setBookmarkedAnime] = useState([]);
-  const [url, setUrl] = useState(() => getCacheUrl(type));
+  const [url] = useState(() => getCacheUrl(type));
 
   const cache = useMemo(() => {
     return new Cache({ url: url });

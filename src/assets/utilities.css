@@ -20,7 +20,7 @@
 
 .skeleton-load {
   border-radius: 0.7rem;
-  opacity: 0.7;
+  opacity: 0.7 !important;
   animation: skeleton-load 1s ease-in-out infinite alternate;
 }
 

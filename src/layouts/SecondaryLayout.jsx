@@ -11,10 +11,11 @@ function SecondaryLayout({
 
   return (
     <div className={`flex bg-(--dark) h-auto w-full flex-col ${className}`}>
-      <div className="p-4">
+      <div className="p-1">
         <button
           onClick={() => navigate(goto)}
-          className="size-10 cursor-pointer"
+          className="size-10 cursor-pointer transition-all duration-200 ease-in hover:opacity-80"
+          title="Go back"
         >
           <MoveLeft className="w-full h-full text-(--blue)" />
         </button>

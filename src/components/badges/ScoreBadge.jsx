@@ -4,8 +4,10 @@ function ScoreBadge({ score = 0, className = '', loading = true }) {
   return (
     <div
       className={`${
-        loading ? 'skeleton-load px-15 py-3' : 'bg-(--gold) h-8 px-2 py-1'
-      } flex items-center rounded-full w-auto ${className}`}
+        loading
+          ? 'skeleton-load px-15 py-3'
+          : `bg-(--gold) h-8 px-2 py-1 ${className}`
+      } flex items-center rounded-full w-auto `}
     >
       {!loading && (
         <>

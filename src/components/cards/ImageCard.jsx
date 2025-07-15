@@ -11,7 +11,10 @@ function ImageCard({
       {!error && (
         <>
           {!loading && (
-            <img src={url} className={`aspect-[2/3] h-[350px] ${className}`} />
+            <img
+              src={url}
+              className={`aspect-[2/3] h-[350px] rounded-md shadow-2xl ${className}`}
+            />
           )}
 
           {loading && (
