@@ -1,0 +1,18 @@
+[project]
+name = "scraper"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Ken-Sama-tech",email = "dikoalambastaacc@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "beautifulsoup4 (>=4.13.4,<5.0.0)",
+    "nodriver (>=0.47.0,<0.48.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

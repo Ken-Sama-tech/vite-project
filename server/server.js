@@ -2,6 +2,7 @@ import express from 'express';
 import anilistRouter from './routes/anilist.route.js';
 import cacheRouter from './routes/animeCache.route.js';
 import settingsRouter from './routes/settings.route.js';
+
 import {
     fileURLToPath
 } from 'url';

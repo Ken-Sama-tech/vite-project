@@ -1,11 +1,16 @@
 import { Heart } from 'lucide-react';
 
-function FavoriteBadge({ className = '', favorite = 0, loading = true }) {
+function FavoriteBadge({
+  className = '',
+  favorite = 0,
+  loading = true,
+  loadStyle = '',
+}) {
   return (
     <div
       className={`${
         loading
-          ? 'skeleton-load px-15 py-3'
+          ? `skeleton-load px-15 py-3 ${loadStyle}`
           : `w-auto h-8 bg-(--tomato) px-2 py-1 ${className}`
       } rounded-full flex items-center justify-center gap-1`}
     >

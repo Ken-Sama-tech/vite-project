@@ -47,6 +47,7 @@ router.get('/anime/sample', async (req, res) => {
   Page(perPage: 10, page: 1) {
     media(type: ANIME, sort: [POPULARITY_DESC], genre_in: ["hentai"]) {
       id
+      studios (isMain: true){nodes{name}}
       title {
         english
         romaji

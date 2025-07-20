@@ -1,13 +1,13 @@
 import { Star } from 'lucide-react';
 
-function ScoreBadge({ score = 0, className = '', loading = true }) {
+function ScoreBadge({ score = 0, className = '', loading = true, loadStyle }) {
   return (
     <div
       className={`${
         loading
-          ? 'skeleton-load px-15 py-3'
+          ? `skeleton-load px-15 py-3 ${loadStyle}`
           : `bg-(--gold) h-8 px-2 py-1 ${className}`
-      } flex items-center rounded-full w-auto `}
+      } flex items-center w-auto rounded-full`}
     >
       {!loading && (
         <>

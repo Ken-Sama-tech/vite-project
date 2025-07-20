@@ -8,6 +8,7 @@ import AnimePage from './features/anime/pages/AnimePage';
 import BrowseByGenre from './features/anime/pages/BrowseByGenre';
 import AnimeList from './features/anime/components/AnimeList';
 import AnimeDetail from './features/anime/pages/AnimeDetail';
+import { useLocation } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
 
@@ -22,6 +23,7 @@ const mainPage = new Map([
 function App() {
   const [mainNavigations, setMainNavigations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     fetch('/navigations.json')
@@ -31,6 +33,23 @@ function App() {
         setIsLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    const dir = location.pathname.toLowerCase();
+
+    const paths = ['Manga', 'Novel', 'History', 'Library'];
+
+    if (dir.includes('anime') || dir === '/') {
+      document.title = 'Anime';
+      return;
+    } else {
+      paths.map((path) => {
+        if (dir.includes(path.toLowerCase())) {
+          document.title = path;
+        }
+      });
+    }
+  }, [location.pathname]);
 
   return (
     <>

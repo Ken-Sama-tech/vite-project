@@ -1,3 +1,7 @@
+import {
+    insertAt
+} from "./utils";
+
 const anilistQueryBuilder = (params) => {
     const {
         name = [], data = [], mediaParams = {}, page = 1, limit = 0, pageInfo = false
@@ -10,17 +14,36 @@ const anilistQueryBuilder = (params) => {
 
     let tempQuery = '';
     const media = JSON.stringify(mediaParams)
-    const newData = data.map((n) => {
-        if (typeof n == 'object') {
-            const string = JSON.stringify(n)
+    const newData = data.map((d) => {
+        if (typeof d == 'object') {
+
+            const {
+                params,
+                ...rest
+            } = d;
+
+            let string = JSON.stringify(rest)
                 .replace(/[{}:"]/g, '')
                 .replace(/\[/g, '{')
                 .replace(/\]/g, '}')
                 .replace(/,/g, ' ')
 
+            if (params) {
+                const keys = Object.keys(params)
+                const values = Object.values(params)
+
+                keys.map((key, idx) => {
+                    const propKey = Object.keys(values[idx])[0]
+                    const propVal = Object.values(values[idx])
+                    const index = string.indexOf(key) + key.length
+                    const insert = `(${propKey}: ${propVal})`
+                    string = insertAt(string, index, insert);
+                })
+            }
+
             return `data=${string}`;
         } else {
-            return `data=${n}`;
+            return `data=${d}`;
         }
     });
 
