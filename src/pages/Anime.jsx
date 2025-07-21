@@ -297,6 +297,7 @@ function Anime() {
           return (
             <li key={idx}>
               <MediaCard
+                hasError={trendingHasError}
                 loading={false}
                 params={{
                   image: item.coverImage.extraLarge,
@@ -330,6 +331,7 @@ function Anime() {
           return (
             <li key={idx}>
               <MediaCard
+                hasError={upcomingHasError}
                 loading={false}
                 params={{
                   image: item.coverImage.extraLarge,
@@ -371,6 +373,7 @@ function Anime() {
             <li key={idx}>
               <MediaCard
                 loading={false}
+                hasError={top100HasError}
                 params={{
                   image: item.coverImage.extraLarge,
                   title: title,

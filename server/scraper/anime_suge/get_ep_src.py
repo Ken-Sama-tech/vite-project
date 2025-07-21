@@ -26,7 +26,7 @@ async def get_ep_src(url):
         iframe = await page.query_selector("div#player iframe")
         src = iframe.__getattr__('src')
 
-        return src
+        print(src)
 
     except Exception as e:
         print("Failed to get episode src:", e, file=sys.stderr)
@@ -36,4 +36,4 @@ async def get_ep_src(url):
 
 url = sys.argv[1]
 
-print(asyncio.run(get_ep_src(url)))
+asyncio.run(get_ep_src(url))

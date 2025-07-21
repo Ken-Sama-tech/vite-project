@@ -9,8 +9,10 @@ import BrowseByGenre from './features/anime/pages/BrowseByGenre';
 import AnimeList from './features/anime/components/AnimeList';
 import AnimeDetail from './features/anime/pages/AnimeDetail';
 import { useLocation } from 'react-router-dom';
-
+import WatchAnime from './features/anime/pages/WatchAnime';
 import { useEffect, useState } from 'react';
+import PageNotFound from './pages/PageNotFound';
+import NetworkError from './pages/NetworkError';
 
 const mainPage = new Map([
   ['Anime', <Anime />],
@@ -64,11 +66,13 @@ function App() {
               />
             );
           })}
-
+          <Route path="*" element={<PageNotFound />} />
+          <Route path="/error/network" element={<NetworkError />} />
           <Route path="/anime" element={<AnimePage />}>
-            <Route index element={<AnimeList />}></Route>
+            <Route index element={<AnimeList />} />
             <Route path="genres" element={<BrowseByGenre />} />
             <Route path=":id/:slug?" element={<AnimeDetail />} />
+            <Route path="watch/:id/:slug?" element={<WatchAnime />} />
           </Route>
         </Routes>
       )}

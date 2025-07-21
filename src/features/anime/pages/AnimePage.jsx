@@ -12,6 +12,8 @@ function AnimePage() {
   const [heading] = useState(() => {
     if (dir.includes('genres')) return 'Browse by Genre';
     else if (params.id) return null;
+    else if (dir.includes('watch')) return null;
+    else if (dir.includes('anime')) return 'Anime';
     else return 'Browse Anime';
   }, [location.pathname]);
 
@@ -19,7 +21,7 @@ function AnimePage() {
     <SecondaryLayout
       className="!h-dvh overflow-y-auto rm-scrollbar"
       heading={heading}
-      goto={-1}
+      goto={'/'}
     >
       <Outlet />
     </SecondaryLayout>

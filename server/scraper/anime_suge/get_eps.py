@@ -20,15 +20,16 @@ async def get_eps(url):
         data = []
         a = soup.find_all("a")
         for x in a:
+            ep_num = x.get("href").find("ep-") + 3
             data.append(
                 {
-                    "ep": x.get("href")[-1:],
+                    "ep": x.get("href")[ep_num:],
                     "title": x.get("title"),
                     "url": x.get("href")
                 }
             )
 
-        return data
+        print(json.dumps(data))
 
     except Exception as e:
         print("Failed to get episode list:", e, file=sys.stderr)
@@ -36,5 +37,4 @@ async def get_eps(url):
         if page:
             await page.close()
 
-data = asyncio.run(get_eps(url))
-print(json.dumps(data))
+asyncio.run(get_eps(url))

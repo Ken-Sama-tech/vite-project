@@ -123,8 +123,7 @@ class FsUtil {
             if (error) {
                 cb(res)
             } else {
-                const result = data.filter(item => item.id === id);
-                console.log(data)
+                const result = data.find(item => item.id === id) || [];
                 cb({
                     success: true,
                     message: result.length <= 0 ? 'No result found' : 'result found',

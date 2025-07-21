@@ -11,7 +11,7 @@ export default defineConfig({
     //   '/': 'http://localhost:3000',
     // }
     watch: {
-      ignored: ['**/server/public/data/**.json']
+      ignored: ['**/server/data/**json']
     }
   },
   plugins: [react(), tailwindcss()],

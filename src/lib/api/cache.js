@@ -8,58 +8,75 @@ class Cache {
     }
 
     get = async (cb = () => {}) => {
-        axios.get(this.baseUrl)
-            .then(res => {
-                cb({
-                    status: 200,
-                    data: res.data
-                });
-            })
-            .catch(err => {
-                cb({
-                    error: true,
-                    message: err.message || err,
-                    status: err.status || 400
-                });
-            })
+        try {
+            const response = await axios.get(this.baseUrl);
+            const data = response.data;
+
+            const res = {
+                status: 200,
+                data: data
+            }
+
+            cb(res);
+            return res
+
+        } catch (err) {
+            const res = {
+                error: true,
+                message: err.message || err,
+                status: err.status || 400
+            }
+            cb(res)
+            return res
+        }
     }
 
     search = async (id, cb = () => {}) => {
-        axios.get(`${this.baseUrl}/search?${id}`)
-            .then(res => {
-                cb({
-                    status: 200,
-                    data: res.data
-                });
-            })
-            .catch(err => {
-                cb({
-                    error: true,
-                    message: err.message || err,
-                    status: err.status || 400
-                });
-            })
+        try {
+            const response = await axios.get(`${this.baseUrl}/search?id=${id}`)
+            const data = response.data;
+
+            const res = {
+                status: 200,
+                data: data
+            }
+
+            cb(res)
+            return res
+        } catch (err) {
+            const res = {
+                error: true,
+                message: err.message || err,
+                status: err.status || 400
+            }
+            cb(res)
+            return res
+        }
     }
 
-    patch = (obj = {}, cb = () => {}) => {
-        axios
-            .patch(`${this.baseUrl}/update`, {
+    patch = async (obj = {}, cb = () => {}) => {
+        try {
+            const response = await axios.patch(`${this.baseUrl}/update`, {
                 ...obj
             })
-            .then(res => {
-                const data = res.data;
-                cb({
-                    message: 'update success',
-                    status: 200,
-                    data: data
-                })
-            }).catch(err => {
-                cb({
-                    error: true,
-                    message: err.message || err,
-                    status: err.status || 400
-                });
-            });
+            const data = response.data;
+            const res = {
+                message: 'update success',
+                status: 200,
+                data: data
+            }
+
+            cb(res)
+            return res
+        } catch (err) {
+            const res = {
+                error: true,
+                message: err.message || err,
+                status: err.status || 400
+            }
+            cb(res)
+            return res
+        }
     }
 }
 

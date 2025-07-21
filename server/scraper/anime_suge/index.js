@@ -18,9 +18,17 @@ const __filename = fileURLToPath(
 const __dirname = path.dirname(__filename)
 
 export const search = async (title, cb = () => {}) => {
-    const kw = slugify(title, {
+    const regex = /^[a-zA-Z0-9]+([^\w\s][a-zA-Z0-9]+)+$/
+    const isSlugified = regex.test(title)
+
+    title = isSlugified ? slugify(title, {
+        character: " "
+    }) : title;
+
+    const kw = isSlugified ? title : slugify(title, {
         character: "+"
-    })
+    });
+
     try {
         const response = await axios.get(`${baseUrl}/filter?keyword=${kw}`, {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
@@ -101,27 +109,28 @@ export const getEps = (url, cb = () => {}) => {
     })
 
     scraper.on('close', () => {
-        if (!error) {
-            try {
+        try {
+            if (!error) {
+
                 const data = JSON.parse(raw)
                 cb({
                     data: data,
                     status: 200,
                     message: "Json output: parsed successful"
                 })
-            } catch (err) {
+            } else {
                 cb({
                     error: true,
-                    status: 500,
-                    data: raw,
-                    message: err.message || err
+                    message: raw,
+                    status: 500
                 })
             }
-        } else {
+        } catch (err) {
             cb({
                 error: true,
-                message: raw,
-                status: 500
+                status: 500,
+                data: raw,
+                message: err.message || err
             })
         }
     })

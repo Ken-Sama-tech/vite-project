@@ -1,7 +1,11 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import anilist from '../../../lib/api/anilist';
-import { formatArrToString, formatDate } from '../../../lib/utils/utils';
+import {
+  formatArrToString,
+  formatDate,
+  slugify,
+} from '../../../lib/utils/utils';
 import CoverBanner from '../../../components/banners/CoverBanner';
 import ImageCard from '../../../components/cards/ImageCard';
 import FavoriteBadge from '../../../components/badges/FavoriteBadge';
@@ -13,7 +17,9 @@ import Heading from '../../../components/texts/Heading';
 import BookmarkButton from '../../../components/buttons/BookmarkButton';
 import DurationBadge from '../components/DurationBadge';
 import ErrorOverlay from '../../../components/overlay/ErrorOverlay';
-import EpisodeList from '../components/EpisodeList';
+import { useNavigate } from 'react-router-dom';
+import OutlinedButton from '../../../components/buttons/OutlinedButton';
+import { PlayCircle } from 'lucide-react';
 
 function AnimeDetail() {
   const params = useParams();
@@ -21,12 +27,12 @@ function AnimeDetail() {
   const [details, setDetails] = useState([]);
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const synopsisRef = useCallback(
     (node) => {
       if (!node) return;
       node.innerHTML = details?.description;
-      console.log('idk');
     },
     [details.description]
   );
@@ -71,6 +77,7 @@ function AnimeDetail() {
         if (error) {
           console.error(res);
           setHasError(true);
+          navigate('/error/network');
           return;
         }
 
@@ -112,8 +119,8 @@ function AnimeDetail() {
               }}
             />
           </div>
-          <div className="max-h-80 grow-1 flex flex-col gap-y-2 justify-start items-start sm:max-h-87 md:items-start md:max-h-51 lg:max-h-full">
-            <div className="w-full h-full overflow-y-auto gap-2 flex flex-col items-start p-2 rm-scrollbar scroll-smooth">
+          <div className="max-h-80 grow-1 flex flex-col gap-y-2 justify-start items-start sm:max-h-87 md:items-start md:max-h-51">
+            <div className="w-full h-full gap-2 flex flex-col items-start p-2 ">
               {!isLoading && !hasError && (
                 <>
                   <Heading
@@ -125,10 +132,12 @@ function AnimeDetail() {
                     loading={isLoading}
                     className="!text-xl shrink-0 !line-clamp-20"
                   />
-                  <span
-                    className="text-[#f2f2f2] text-sm md:text-base"
-                    ref={synopsisRef}
-                  ></span>
+                  <div className="grow w-full overflow-auto">
+                    <span
+                      className="text-[#f2f2f2] text-sm md:text-base"
+                      ref={synopsisRef}
+                    ></span>
+                  </div>
                 </>
               )}
               {isLoading && !hasError && (
@@ -149,10 +158,29 @@ function AnimeDetail() {
           </div>
         </div>
 
-        <div className="flex gap-x-2 w-full h-auto p-2 max-h-[40vh]">
+        <div className="flex gap-x-2 w-full h-auto p-2 max-h-[45vh]">
           <div className="w-1/3 grid gap-1.5 mt-2 shrink-0 md:w-1/6 px-2 py-1">
             {!hasError && (
               <>
+                {details?.status !== 'NOT_YET_RELEASED' && (
+                  <OutlinedButton
+                    loadStyle="!w-full !border-none !h-8"
+                    callback={() => {
+                      navigate(
+                        `/anime/watch/${details?.id}/${slugify(
+                          details?.title?.romaji || details?.title?.native
+                        )}`
+                      );
+                    }}
+                    loading={isLoading}
+                    className="!rounded-md"
+                  >
+                    <span className="flex justify-center gap-1 font-semibold">
+                      Watch <PlayCircle className="h-full shrink-0" />
+                    </span>
+                  </OutlinedButton>
+                )}
+
                 <EntryBadge
                   className="!h-8 px-3 !justify-center !rounded-lg !text-sm shrink-0 grow-0 font-semibold"
                   loading={isLoading}
@@ -180,7 +208,7 @@ function AnimeDetail() {
                 />
                 <DurationBadge
                   className="!px-3 !rounded-lg !justify-center !bg-(--blue) !text-sm shrink-0 grow-0 !h-8 font-semibold"
-                  entry={`${details?.duration} mins`}
+                  entry={details?.duration ? `${details?.duration} mins` : '??'}
                   loading={isLoading}
                   loadStyle="h-8 !rounded-md"
                 />
@@ -294,7 +322,6 @@ function AnimeDetail() {
           </div>
         </div>
       </section>
-      <EpisodeList titles={details?.title} />
     </main>
   );
 }

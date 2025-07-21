@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import SubHeading from '../texts/SubHeading';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import ErrorOverlay from '../overlay/ErrorOverlay';
 import MediaCard from '../cards/MediaCard';
 
 function Slider({
@@ -76,68 +75,69 @@ function Slider({
       aria-label="card slider"
       className={`bg-(--dark) h-[50vh] p-2 flex flex-col relative ${className}`}
     >
-      {!error && (
-        <>
-          <div className="w-full flex items-center justify-between">
-            <SubHeading
-              className="!text-2xl"
-              text={headers}
-              loading={isLoading}
-            />
-            {hasMore && (
-              <>
-                <Link
-                  to={goto}
-                  className={`${
-                    isLoading
-                      ? 'skeleton-load py-3 px-10'
-                      : 'text-(--blue) font-semibold transition-all duration-200 ease-in hover:underline hover:opacity-90'
-                  }`}
-                >
-                  {!isLoading && 'See More'}
-                </Link>
-              </>
-            )}
-          </div>
+      <>
+        <div className="w-full flex items-center justify-between">
+          {!error && (
+            <>
+              <SubHeading
+                className="!text-2xl"
+                text={headers}
+                loading={isLoading}
+              />
+              {hasMore && (
+                <>
+                  <Link
+                    to={goto}
+                    className={`${
+                      isLoading
+                        ? 'skeleton-load py-3 px-10'
+                        : 'text-(--blue) font-semibold transition-all duration-200 ease-in hover:underline hover:opacity-90'
+                    }`}
+                  >
+                    {!isLoading && 'See More'}
+                  </Link>
+                </>
+              )}
+            </>
+          )}
+        </div>
 
-          <div className="flex relative grow-1 w-full px-10">
-            {isLoading && (
-              <div className="w-full flex gap-6 px-0 pb-2 pt-3 justify-center">
-                <MediaCard />
-                <MediaCard />
-                <MediaCard />
-                <MediaCard />
-                <MediaCard />
-                <MediaCard />
-              </div>
-            )}
-            {!isLoading && (
-              <>
-                <ul
-                  ref={scrollableContainerRef}
-                  className="w-full flex snap-x snap-mandatory overflow-y-hidden rm-scrollbar px-0 pb-2 pt-3 gap-6"
-                >
-                  {children}
-                </ul>
-                <button
-                  ref={scrollRightRef}
-                  className="cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 size-8"
-                >
-                  <ChevronRight className="h-full w-full text-(--blue)" />
-                </button>
-                <button
-                  ref={scrollLeftRef}
-                  className="cursor-pointer absolute left-2 top-1/2 -translate-y-1/2 size-8"
-                >
-                  <ChevronLeft className="h-full w-full text-(--blue)" />
-                </button>
-              </>
-            )}
-          </div>
-        </>
-      )}
+        <div className="flex relative grow-1 w-full px-10">
+          {isLoading && (
+            <div className="w-full flex gap-6 px-0 pb-2 pt-3 justify-center">
+              <MediaCard hasError={error} />
+              <MediaCard hasError={error} />
+              <MediaCard hasError={error} />
+              <MediaCard hasError={error} />
+              <MediaCard hasError={error} />
+              <MediaCard hasError={error} />
+            </div>
+          )}
 
-      {error && <ErrorOverlay />}
+          {!isLoading && !error && (
+            <>
+              <ul
+                ref={scrollableContainerRef}
+                className="w-full flex snap-x snap-mandatory overflow-y-hidden rm-scrollbar px-0 pb-2 pt-3 gap-6"
+              >
+                {children}
+              </ul>
+              <button
+                ref={scrollRightRef}
+                className="cursor-pointer absolute right-2 top-1/2 -translate-y-1/2 size-8"
+              >
+                <ChevronRight className="h-full w-full text-(--blue)" />
+              </button>
+              <button
+                ref={scrollLeftRef}
+                className="cursor-pointer absolute left-2 top-1/2 -translate-y-1/2 size-8"
+              >
+                <ChevronLeft className="h-full w-full text-(--blue)" />
+              </button>
+            </>
+          )}
+        </div>
+      </>
     </section>
   );
 }

@@ -8,7 +8,7 @@ import {
 const __filename = fileURLToPath(
     import.meta.url);
 const __dirname = path.dirname(__filename);
-const settingsPath = path.resolve(__dirname, '../public/data/settings.json');
+const settingsPath = path.resolve(__dirname, '../data/settings.json');
 
 const fsUtil = new FsUtil({
     path: settingsPath,
