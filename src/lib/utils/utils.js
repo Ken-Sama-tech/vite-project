@@ -37,9 +37,20 @@ export const formatDate = (date = {}) => {
 }
 
 export const formatTimestamp = (timestamp) => {
-    const date = new Date(timestamp * 1000)
-    console.log(date)
-}
+    const date = new Date(timestamp * 1000);
+
+    const pad = (n) => String(n).padStart(2, '0');
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1);
+    const day = pad(date.getDate());
+
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
 
 export const formatArrToString = (arr = [], property, char = ', ') => {
     if (!arr || !property)
@@ -52,4 +63,13 @@ export const formatArrToString = (arr = [], property, char = ', ') => {
 
 export const insertAt = (str, index, insert) => {
     return str.slice(0, index) + insert + str.slice(index)
+}
+
+export const splitIntoChunks = (iterable, incBy = 1) => {
+    const chunks = []
+    for (let i = 0; i < iterable.length - 1; i += incBy) {
+        chunks.push(iterable.slice(i, i + incBy))
+    }
+
+    return chunks
 }

@@ -1,6 +1,6 @@
 {
   "content": {
-    "active": "NSFW",
+    "active": "SFW",
     "enum": [
       "NSFW",
       "SFW",
@@ -8,7 +8,7 @@
     ]
   },
   "sort": {
-    "active": "SCORE_DESC",
+    "active": "TRENDING_DESC",
     "alias": [
       [
         "SCORE_DESC",

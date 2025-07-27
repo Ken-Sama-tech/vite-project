@@ -19,7 +19,6 @@ const cacheTemplate = {
     "type": "anime",
     "episodesWatched": [],
     "lastEpisodeWatched": null,
-    "finishedLastEpisode": false,
     "viewed": false
 }
 

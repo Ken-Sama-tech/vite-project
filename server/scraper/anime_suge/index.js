@@ -16,16 +16,17 @@ const baseUrl = "https://animesugetv.se"
 const __filename = fileURLToPath(
     import.meta.url)
 const __dirname = path.dirname(__filename)
+const controller = new AbortController()
+const {
+    signal
+} = controller
 
 export const search = async (title, cb = () => {}) => {
-    const regex = /^[a-zA-Z0-9]+([^\w\s][a-zA-Z0-9]+)+$/
-    const isSlugified = regex.test(title)
-
-    title = isSlugified ? slugify(title, {
+    title = slugify(title, {
         character: " "
-    }) : title;
+    });
 
-    const kw = isSlugified ? title : slugify(title, {
+    const kw = slugify(title, {
         character: "+"
     });
 
@@ -47,10 +48,13 @@ export const search = async (title, cb = () => {}) => {
             const url = $(a).attr('href');
             const title = $(a).text().trim();
             const romaji = $(a).attr('data-jp')
+            const index = url.indexOf('ep-') + 3
+            const eps = Number(url.slice(index))
             data.push({
                 title,
                 url,
-                romaji
+                romaji,
+                eps
             });
         })
 
@@ -92,48 +96,58 @@ export const search = async (title, cb = () => {}) => {
 }
 
 export const getEps = (url, cb = () => {}) => {
-    const scraper = spawn('python', [path.join(__dirname, './get_eps.py'), url])
-
-    let raw = ""
-    let error = false
-    let err_message = ""
-
-    scraper.stdout.on('data', res => {
-        const text = res.toString()
-        raw += text
+    const scraper = spawn('python', [path.join(__dirname, './get_eps.py'), url], {
+        signal,
+        shell: true,
     })
 
-    scraper.stderr.on('data', res => {
-        error = true
-        err_message += (res.toString() || "Failed to get episode list")
-    })
+    try {
+        let raw = ""
+        let error = false
 
-    scraper.on('close', () => {
-        try {
-            if (!error) {
+        scraper.stdout.on('data', res => {
+            const text = res.toString().trim()
+            raw += text
+        })
 
-                const data = JSON.parse(raw)
-                cb({
-                    data: data,
-                    status: 200,
-                    message: "Json output: parsed successful"
-                })
-            } else {
+        scraper.stderr.on('data', res => {
+            error = true
+            raw += res.toString().trim()
+        })
+
+        scraper.on('close', () => {
+            try {
+
+                if (!error) {
+                    const data = JSON.parse(raw)
+                    cb({
+                        data: data,
+                        status: 200,
+                        message: "Json output: parsed successful"
+                    })
+                } else {
+                    cb({
+                        error: true,
+                        errType: 'special',
+                        message: "Failed to parsed json",
+                        status: 500,
+                        data: raw,
+                        url: url
+                    })
+                }
+            } catch (err) {
                 cb({
                     error: true,
-                    message: raw,
-                    status: 500
+                    status: 500,
+                    data: raw,
+                    message: err.message || err
                 })
             }
-        } catch (err) {
-            cb({
-                error: true,
-                status: 500,
-                data: raw,
-                message: err.message || err
-            })
-        }
-    })
+        })
+    } catch (error) {
+        controller.abort()
+        scraper.kill('SIGTERM')
+    }
 }
 
 export const getEpSrc = (url, cb = () => {}) => {
@@ -141,32 +155,41 @@ export const getEpSrc = (url, cb = () => {}) => {
     let error = false
     let err_message = ""
 
-    const scraper = spawn('python', [path.join(__dirname, './get_ep_src.py'), url]);
-
-    scraper.stdout.on('data', res => {
-        src = res.toString().trim()
+    const scraper = spawn('python', [path.join(__dirname, './get_ep_src.py'), url], {
+        signal,
+        shell: true
     });
 
-    scraper.stderr.on('data', res => {
-        error = true
-        err_message = res.toString()
-    })
+    try {
+        scraper.stdout.on('data', res => {
+            src = res.toString().trim()
+        });
 
-    scraper.on('close', () => {
-        if (!error) {
-            cb({
-                data: {
-                    src
-                },
-                message: "Succesfully extracted src",
-                status: 200,
-            })
-        } else {
-            cb({
-                error: true,
-                message: err_message,
-                status: 500
-            })
-        }
-    });
+        scraper.stderr.on('data', res => {
+            error = true
+            err_message = res.toString()
+        })
+
+        scraper.on('close', () => {
+            if (!error) {
+                cb({
+                    data: {
+                        src
+                    },
+                    message: "Succesfully extracted src",
+                    status: 200,
+                })
+
+            } else {
+                cb({
+                    error: true,
+                    message: err_message,
+                    status: 500
+                })
+            }
+        });
+    } catch (error) {
+        controller.abort()
+        scraper.kill('SIGTERM')
+    }
 }

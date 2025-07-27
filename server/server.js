@@ -2,7 +2,8 @@ import express from 'express';
 import anilistRouter from './routes/anilist.route.js';
 import cacheRouter from './routes/animeCache.route.js';
 import settingsRouter from './routes/settings.route.js';
-import animeSugeRouter from './routes/animeSuge.route.js'
+import animeSugeRouter from './routes/animeSuge.route.js';
+import cleanupRouter from './routes/cleanup.route.js';
 
 import {
     fileURLToPath
@@ -23,6 +24,7 @@ app.use('/api/anilist', anilistRouter);
 app.use('/api/animesuge', animeSugeRouter)
 app.use('/cache/anime', cacheRouter);
 app.use('/settings', settingsRouter);
+app.use('/cleanup', cleanupRouter)
 
 
 app.listen(PORT, () => {

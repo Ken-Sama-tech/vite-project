@@ -4,6 +4,7 @@ import anilist from '../../../lib/api/anilist';
 import {
   formatArrToString,
   formatDate,
+  formatTimestamp,
   slugify,
 } from '../../../lib/utils/utils';
 import CoverBanner from '../../../components/banners/CoverBanner';
@@ -229,6 +230,14 @@ function AnimeDetail() {
                 {!isLoading && (
                   <>
                     <div className="grid grid-cols-1 h-full overflow-auto rm-scrollbar">
+                      {details.status === 'RELEASING' && (
+                        <span className="text-neutral-300 font-semibold text-base">
+                          Updated at:{' '}
+                          <span className="text-sm font-normal">
+                            {formatTimestamp(details?.updatedAt)}
+                          </span>
+                        </span>
+                      )}
                       <span className="text-neutral-300 font-semibold text-base">
                         Aired:{' '}
                         <span className="text-sm font-normal">

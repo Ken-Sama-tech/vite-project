@@ -4,6 +4,9 @@ import {
     getEps,
     getEpSrc
 } from '../scraper/anime_suge/index.js'
+import axios from 'axios';
+
+const cleanupUrl = 'http://localhost:3000/cleanup/killzombies'
 
 const router = express.Router();
 
@@ -28,7 +31,7 @@ router.get('/search', async (req, res) => {
     }
 })
 
-router.get('/eps', (req, res) => {
+router.get('/eps', async (req, res) => {
     const {
         url = "",
             ep = null
@@ -37,6 +40,8 @@ router.get('/eps', (req, res) => {
     try {
         if (!url)
             throw new Error("Url cannot be empty")
+
+        await axios.get(cleanupUrl)
         getEps(url, (response) => {
             const {
                 data,
@@ -51,13 +56,16 @@ router.get('/eps', (req, res) => {
             }
 
             if (Number(ep)) {
+                let isValidEp = Number(ep) <= data.length
+
                 const eps = data.map((d) => {
-                    if (Number(d.ep) === Number(ep))
+                    if (Number(d.ep) === Number(isValidEp ? ep : 1))
                         return d
                 }).filter(Boolean)
 
                 res.json({
                     data: eps,
+                    eps: data,
                     status,
                     message
                 })
@@ -79,7 +87,7 @@ router.get('/eps', (req, res) => {
     }
 })
 
-router.get('/source', (req, res) => {
+router.get('/source', async (req, res) => {
     const {
         url = ""
     } = req.query;
@@ -88,6 +96,7 @@ router.get('/source', (req, res) => {
         if (!url)
             throw new Error("Url cannot be empty")
 
+        await axios.get(cleanupUrl)
         getEpSrc(url, response => {
             const {
                 data,

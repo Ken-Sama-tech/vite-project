@@ -9,9 +9,65 @@
     "imageUrl": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx154587-qQTzQnEJJ3oB.jpg",
     "bookmarked": true,
     "type": "anime",
+    "episodesWatched": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28
+    ],
+    "lastEpisodeWatched": 28,
+    "viewed": false
+  },
+  {
+    "id": 21,
+    "title": "ONE PIECE",
+    "alternative": [
+      "ONE PIECE",
+      "ONE PIECE"
+    ],
+    "imageUrl": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21-ELSYx3yMPcKM.jpg",
+    "bookmarked": true,
+    "type": "anime",
     "episodesWatched": [],
-    "lastEpisodeWatched": 23,
-    "finishedLastEpisode": false,
+    "lastEpisodeWatched": null,
+    "viewed": false
+  },
+  {
+    "id": 137667,
+    "title": "Lord of Mysteries",
+    "alternative": [
+      "Guimi Zhi Zhu",
+      "诡秘之主"
+    ],
+    "imageUrl": "https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx137667-zHFOF6qbpksP.jpg",
+    "bookmarked": true,
+    "type": "anime",
+    "episodesWatched": [],
+    "lastEpisodeWatched": null,
     "viewed": false
   }
 ]

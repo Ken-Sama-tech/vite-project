@@ -4,9 +4,17 @@ import asyncio
 
 
 async def get_ep_src(url):
+
     page = None
+    browser = None
     try:
-        browser = await uc.start(headless=True, user_data_dir="C:\\Users\\galla\\AppData\\Local\\Temp")
+        browser = await uc.start(
+            headless=True,
+            user_data_dir="C:\\Users\\galla\\AppData\\Local\\Temp",
+            sandbox=False,
+            browser_executable_path="C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe",
+            browser_args=['--no-sandbox '],
+        )
         page = await browser.get(url)
         await browser.wait(2)
         await page.wait_for("div.media-controls-wrap")
@@ -33,7 +41,7 @@ async def get_ep_src(url):
     finally:
         if page:
             await page.close()
-
+            browser.stop()
 url = sys.argv[1]
 
 asyncio.run(get_ep_src(url))
