@@ -5,17 +5,44 @@ from bs4 import BeautifulSoup
 import requests
 import re
 import json
+import signal
+import subprocess
 
-headers = {
-    "Referer": "https://megaplay.buzz/",
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv.0) Gecko/20100101 Firefox/124.0"
-}
+
+async def cleanup(exit=False):
+    cmds = [
+        "taskkill /F /IM msedge.exe /T",
+        "taskkill /F /IM msedgewebview2.exe /T"
+    ]
+
+    for cmd in cmds:
+        try:
+            subprocess.run(
+                cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        except Exception as e:
+            print(f"Failed to run: {cmd}\nError: {e}")
+
+    # if exit:
+    #     print("Cleaned up all msedge-related processes.")
+    #     sys.exit(0)
+
+
+# def setup_clean_signal():
+#     for sig in [signal.SIGINT, signal.SIGTERM]:
+#         signal.signal(sig, lambda s, f: asyncio.create_task(cleanup(True)))
 
 
 async def get_info(url):
 
+    headers = {
+        "Referer": "https://megaplay.buzz/",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv.0) Gecko/20100101 Firefox/124.0"
+    }
+
+    # setup_clean_signal()
     browser = None
     page = None
+
     try:
         data = {
             'episodes': []
@@ -35,8 +62,7 @@ async def get_info(url):
             await auto_play_btn.click()
             await page.reload()
 
-        eps_container = await page.query_selector("div.range")
-        eps = await eps_container.query_selector_all("a")
+        eps = await page.query_selector_all("div.range a")
         iframe_src = (await page.query_selector("div#player iframe")).__getattr__("src")
         data['iframe_src'] = iframe_src
         for ep in eps:
@@ -47,12 +73,14 @@ async def get_info(url):
             data_id = a.get("data-id")
             mal_id = a.get("data-mal")
             data_tt = a.get("data-timestamp")
+            ep = a.get("data-slug")
             res = {
                 'href': href,
                 'title': title,
-                'data_id': data_id,
-                'mal_id': mal_id,
-                'data_tt': data_tt
+                'data_id': int(data_id),
+                'mal_id': int(mal_id),
+                'data_tt': int(data_tt),
+                'ep': int(ep)
             }
             data['episodes'].append(res)
 
@@ -65,11 +93,13 @@ async def get_info(url):
 
         print(json.dumps(data))
     except Exception as e:
-        print("Error", e, file=sys.stderr)
+        print("Error", str(e).strip, file=sys.stderr)
     finally:
-        await page.close()
-        browser.stop()
+        if page:
+            await page.close()
+            browser.stop()
 
 
 url = sys.argv[1]
+asyncio.run(cleanup())
 asyncio.run(get_info(url))
