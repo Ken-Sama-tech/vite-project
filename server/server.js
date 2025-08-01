@@ -2,7 +2,8 @@ import express from 'express';
 import anilistRouter from './routes/anilist.route.js';
 import cacheRouter from './routes/animeCache.route.js';
 import settingsRouter from './routes/settings.route.js';
-import dotenv from 'dotenv'
+import animesugeRouter from './routes/animesuge.route.js';
+import dotenv from 'dotenv';
 dotenv.config()
 
 import {
@@ -21,6 +22,7 @@ const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/public')));
 app.use('/api/anilist', anilistRouter);
+app.use('/api/animesuge', animesugeRouter)
 app.use('/cache/anime', cacheRouter);
 app.use('/settings', settingsRouter);
 
